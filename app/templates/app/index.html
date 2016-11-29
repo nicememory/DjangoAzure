@@ -3,13 +3,14 @@
 {% block content %}
 <style type="text/css">
 	html, body { height: 100%; margin: 0; padding: 0; }
-	.body-content { height: 100% }
-	.jumbotronx { height: 100% }
-    #map {height:}
+    #mainx {height: 100%}
 </style>
-<div id="mainx" class="jumbotronx">
-    <input type="text" name="name"><input type="button" id="search_btn" value="Search">
-	<div id="map">		
+<div id="mainx" class="container-fluid row">
+    <div class="column">    
+        <input type="text" id="search_text" name="name">
+        <input type="button" id="search_btn" class="btn btn-primary" value="Search">
+    </div>
+	<div class="column" id="map">		
 	</div>
 </div>
 {% endblock %}
@@ -17,11 +18,11 @@
 {% block scripts %}
 	<script type="text/javascript">
 	var map;
-    $("#map").height(512);
 
 	function initMap()
-	{   
-		map = new google.maps.Map($("#map"),
+	{  
+        //$("#map").height($("#mainx").height() - $("#search_btn").height());
+		map = new google.maps.Map(document.getElementById("map"),//$("#map"),
 		{
 			center : {lat : -34.397, lng : 150.644},
 			zoom   : 8
