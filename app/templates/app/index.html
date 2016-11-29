@@ -17,8 +17,10 @@
 {% block scripts %}
 	<script type="text/javascript">
 	var map;
+    $("#map").height(512);
+
 	function initMap()
-	{   $("#map").height(1000);
+	{   
 		map = new google.maps.Map($("#map"),
 		{
 			center : {lat : -34.397, lng : 150.644},
