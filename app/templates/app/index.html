@@ -5,6 +5,7 @@
 	html, body { height: 100%; margin: 0; padding: 0; }
 	.body-content { height: 100% }
 	.jumbotronx { height: 100% }
+    #map {height:}
 </style>
 <div class="jumbotronx">
     <input type="text" name="name"><input type="button" value="Search">
@@ -17,7 +18,7 @@
 	<script type="text/javascript">
 	var map;
 	function initMap()
-	{
+	{   $("#map").height($(".jumbotronx").height() - 20px);
 		map = new google.maps.Map(document.getElementById("map"),
 		{
 			center : {lat : -34.397, lng : 150.644},
