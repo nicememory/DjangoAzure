@@ -8,7 +8,7 @@
     #map {height:}
 </style>
 <div class="jumbotronx">
-    <input type="text" name="name"><input type="button" value="Search">
+    <input type="text" name="name"><input type="button" id="search_btn" value="Search">
 	<div id="map">		
 	</div>
 </div>
@@ -18,8 +18,8 @@
 	<script type="text/javascript">
 	var map;
 	function initMap()
-	{   $("#map").height($(".jumbotronx").height() - 20px);
-		map = new google.maps.Map(document.getElementById("map"),
+	{   $("#map").height($(".jumbotronx").height() - $("#search_btn").height());
+		map = new google.maps.Map($("#map"),
 		{
 			center : {lat : -34.397, lng : 150.644},
 			zoom   : 8
