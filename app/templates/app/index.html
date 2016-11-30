@@ -33,8 +33,9 @@
                     $("#search-bar").height());
     $("#search-text").autocomplete({
             serviceUrl: 'https://data.sfgov.org/resource/wwmu-gmzc.json',
+	    paramName:'$select=title'
             onSelect: function(suggestion){
-                    alert('you selected' + suggestion);
+                    alert('you selected' + suggestion.title);
             }
     }); 
 	function initMap()
