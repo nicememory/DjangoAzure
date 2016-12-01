@@ -25,18 +25,27 @@
 {% endblock %}
 
 {% block scripts %}
-	<script type="text/javascript">
-	var map;
+<script type="text/javascript">
+    var map;
     $(".body-content").height($("body").height());
     $("#empty-box").height($(".navbar").height());
     $("#map").height($(".body-content").height() - $("#empty-box").height() -
                     $("#search-bar").height());
     $("#search-text").autocomplete({
-            serviceUrl: 'https://data.sfgov.org/resource/wwmu-gmzc.json',
-	    paramName:'$select=title'
-            onSelect: function(suggestion){
+        lookup: function (query, done) {
+            var result = {
+                suggestions: [
+                    { "value": "United Arab Emirates", "data": "AE" },
+                    { "value": "United Kingdom",       "data": "UK" },
+                    { "value": "United States",        "data": "US" }
+                ]
+            };
+
+            done(result);
+        }, 
+	onSelect: function(suggestion){
                     alert('you selected' + suggestion.title);
-            }
+    	}
     }); 
 	function initMap()
 	{
