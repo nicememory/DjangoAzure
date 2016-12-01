@@ -33,7 +33,7 @@
                     $("#search-bar").height());
     $("#search-text").autocomplete({
         lookup: function (query, done) {
-            var dataUrl ="https://data.sfgov.org/resource/wwmu-gmzc.json?$where=title like '%25" + query + "%25'";
+            var dataUrl ="https://data.sfgov.org/resource/wwmu-gmzc.json?$select=title&$where=title like '%25" + query + "%25'&$group=title";
             var ajaxSettings = {
                 url: dataUrl,
                 dataType: 'json'
@@ -42,19 +42,18 @@
             var currentRequest = $.ajax(ajaxSettings).done(function(data)
             {
                 var jsonData  = typeof data === 'string' ?  $.parseJSON(data) : data;
-                alert(data);
+                var result = {
+                    suggestions: [
+                    ]
+                };
+                for(var d in data)
+                {
+                    result.suggestions.push({"value":d.value, "data": ""});
+                }
+                done(result);
             }).fail(function(jqXHR, textStatus, errorThrown) {
             });
 
-            var result = {
-                suggestions: [
-                    { "value": "United Arab Emirates", "data": "AE" },
-                    { "value": "United Kingdom",       "data": "UK" },
-                    { "value": "United States",        "data": "US" }
-                ]
-            };
-
-            done(result);
         }, 
 	onSelect: function(suggestion){
                     alert('you selected' + suggestion.title);
