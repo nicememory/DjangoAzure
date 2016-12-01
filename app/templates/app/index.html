@@ -43,12 +43,15 @@
             {
                 var jsonData  = typeof data === 'string' ?  $.parseJSON(data) : data;
                 var result = {
-                    suggestions: [
+                    suggestions: 
+                    [
+                        {"value":"123456"}
                     ]
                 };
-                for(var d in data)
+                for(var d in jsonData)
                 {
-                    result.suggestions.push({"value":d.title, "data": ""});
+		    alert(d.title);
+                    //result.suggestions.push({"value":d.title, "data": ""});
                 }
                 done(result);
             }).fail(function(jqXHR, textStatus, errorThrown) {
