@@ -33,7 +33,7 @@
                     $("#search-bar").height());
     $("#search-text").autocomplete({
         lookup: function (query, done) {
-            var dataUrl ="https://data.sfgov.org/resource/wwmu-gmzc.json?$where=title like '%" + query + "%'";
+            var dataUrl ="https://data.sfgov.org/resource/wwmu-gmzc.json?$where=title like '%25" + query + "%25'";
             var ajaxSettings = {
                 url: dataUrl,
                 dataType: 'json'
