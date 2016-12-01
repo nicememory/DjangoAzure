@@ -33,6 +33,19 @@
                     $("#search-bar").height());
     $("#search-text").autocomplete({
         lookup: function (query, done) {
+            var dataUrl ="https://data.sfgov.org/resource/wwmu-gmzc.json?$where=title like '%" + query + "%'";
+            var ajaxSettings = {
+                url: dataUrl,
+                dataType: 'json'
+                
+            };
+            var currentRequest = $.ajax(ajaxSettings).done(function(data)
+            {
+                var jsonData  = $.parseJSON(data);
+                alert(data);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+            });
+
             var result = {
                 suggestions: [
                     { "value": "United Arab Emirates", "data": "AE" },
