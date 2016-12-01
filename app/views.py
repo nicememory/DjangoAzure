@@ -33,6 +33,7 @@ def contact(request):
 def about(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
+    context = {}
     context['title'] = 'About'
     context['message'] = 'SF Movie Map.'
     context['year'] = datetime.now().year
