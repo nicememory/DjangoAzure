@@ -48,7 +48,7 @@
                 };
                 for(var d in data)
                 {
-                    result.suggestions.push({"value":d.value, "data": ""});
+                    result.suggestions.push({"value":d.title, "data": ""});
                 }
                 done(result);
             }).fail(function(jqXHR, textStatus, errorThrown) {
