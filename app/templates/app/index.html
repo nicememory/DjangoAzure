@@ -3,8 +3,16 @@
 {% block content %}
 <style type="text/css">
 	html, body { height: 100%; margin: 0; padding: 0; }
-    #search-text {width: 100% }
+    #search-text {width: 100%; max-width: 100% }
     #search-btn {width: 100% }
+    .autocomplete-suggestions { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-bo; border: 1p solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
+    .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+    .autocomplete-no-suggestion { padding: 2px 5px;}
+    .autocomplete-selected { background: #F0F0F0; }
+    .autocomplete-suggestions strong { font-weight: bold; color: #000; }
+    .autocomplete-group { padding: 2px 5px; }
+    .autocomplete-group strong { font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000; }
+
 </style>
 <div id="empty-box" class="row">
         <div class="col-lg-12">
@@ -12,7 +20,8 @@
 </div>
 <div id="search-bar" class="row">
     <div class="col-lg-10">
-        <input type="text" id="search-text" name="name">
+        <input type="text" id="search-text" class="form-control" placeholder="Input film name to search shot locations in San Francisco" name="name">
+        <span id="info" class="help-block">Press Search Button to find locations!</span>
     </div>
     <div class="col-lg-2">
         <input type="button" id="search-btn" class="btn btn-primary" value="Search">
@@ -27,6 +36,11 @@
 {% block scripts %}
 <script type="text/javascript">
     var map;
+    var geocoder;
+    var count;
+    var filmName;
+    var markers = [];
+
     $(".body-content").height($("body").height());
     $("#empty-box").height($(".navbar").height());
     $("#map").height($(".body-content").height() - $("#empty-box").height() -
@@ -45,13 +59,12 @@
                 var result = {
                     suggestions: 
                     [
-                        {"value":"123456"}
                     ]
                 };
-                for(var d in jsonData)
+
+                for(var i=0; i<jsonData.length; ++i)
                 {
-		    alert(d.title);
-                    //result.suggestions.push({"value":d.title, "data": ""});
+                    result.suggestions.push({"value":jsonData[i].title, "data": ""});
                 }
                 done(result);
             }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -59,15 +72,68 @@
 
         }, 
 	onSelect: function(suggestion){
-                    alert('you selected' + suggestion.title);
     	}
-    }); 
+    });
+    $("#search-btn").click(function(){
+            var movieTitle = $("#search-text").val();
+            filmName = movieTitle;
+            for(var i=0;i<markers.length; ++i)
+            {
+                markers[i].setMap(null);
+            }
+            markers = [];
+
+            $("#info").text("Film '" + filmName +"' is not found.");
+            var dataUrl ="https://data.sfgov.org/resource/wwmu-gmzc.json?$select=*&$where=title='" + movieTitle + "'";
+            var ajaxSettings = {
+                url: dataUrl,
+                dataType: 'json'
+            };
+            var currentRequest = $.ajax(ajaxSettings).done(function(data)
+            {
+                var jsonData = typeof data === 'string' ?  $.parseJSON(data) : data;
+                for(var i=0;i<jsonData.length;++i)
+                {
+                    count = 0;
+                    $("#info").text("There are no shot locations found for film '" + filmName +"'.");
+                    var locations = jsonData[i].locations;
+                    geocoder.geocode( { 'address': locations + 'San Francisco CA'}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        title: results[0].formatted_address
+                    });
+                    markers.push(marker);
+                    ++count;
+                    if(count > 1)
+                    {
+                        $("#info").text("There are " + count + " shot locations found for film '" + filmName +"'.");
+                    }
+                    else if(count == 1)
+                    {
+                        $("#info").text("There is " + count + " shot location found for film '" + filmName +"'.");
+                    }
+                    else
+                    {
+                        $("#info").text("There are no shot locations found for film '" + filmName +"'.");
+                    }
+                    } else {
+                    }
+                    });
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+            });
+    });
+
 	function initMap()
 	{
-		map = new google.maps.Map(document.getElementById("map"),//$("#map"),
+        geocoder = new google.maps.Geocoder();
+		map = new google.maps.Map(document.getElementById("map"),
 		{
-			center : {lat : -34.397, lng : 150.644},
-			zoom   : 8
+			center : {lat : 37.783333, lng : -122.4181936},
+			zoom   : 11
 		});
 	}
 	</script>
